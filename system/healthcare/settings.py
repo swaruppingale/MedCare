@@ -1,7 +1,7 @@
-import os
-
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'wappApi',
+    'chatbot',
 ]
 
 MIDDLEWARE = [
