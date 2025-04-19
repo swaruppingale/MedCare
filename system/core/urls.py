@@ -26,20 +26,4 @@ path('meet/save/', views.SaveMent, name='savement'),
 path('doctors/', views.doctor_list, name='dr_list'),
 path('about/', views.about, name='about'),
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ]
