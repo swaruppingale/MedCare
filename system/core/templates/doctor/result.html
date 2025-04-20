@@ -40,7 +40,7 @@
                         {% for d in disease %}
                         <tr>
                             <td>{{ d.id }}</td>
-                            <td>{{ d.patient.username }}</td>
+                            <td>{{ d.patient.name }}</td>
                             <td>{{ d.disease }}</td>
                             {% if d.medicine == "" %}
                             <td>Yet Recommended</td>

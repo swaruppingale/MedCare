@@ -104,12 +104,19 @@
             <span style="color: white">Appointment</span>
         </a>
     </li>
+    
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'create_profile' %}">
+            <i class="fas fa-user-edit text-primary"></i>
+            <span style="color: white">View Profile</span>
+        </a>
+    </li>
     {% else %}
 
      <li class="nav-item">
         <a class="nav-link" href="{% url 'create_profile' %}">
             <i class="fas fa-user text-primary"></i>
-            <span style="color: white">User Profile</span>
+            <span style="color: white">Create Profile</span>
         </a>
     </li>
     {% endif %}

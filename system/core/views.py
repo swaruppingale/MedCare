@@ -91,8 +91,8 @@ def patient_home(request):
 	user_id = request.user.id
 	user_profile = Profile.objects.filter(user_id=user_id)
 	if not user_profile:
-		context = {'profile_status':'Please Create Profile To Continue', 'doctor':doctor, 'ment':appointment, patient:'patient', 'drug':medical3}
-		return render(request, 'patient/home.html', context)
+		messages.warning(request, 'Please create your profile to continue')
+		return redirect('create_profile')
 	else:
 		context = {'status':'1', 'doctor':doctor, 'ment':appointment, patient:'patient', 'drug':medical3}
 		return render(request, 'patient/home.html', context)
@@ -107,17 +107,35 @@ def create_profile(request):
 		gender = request.POST['gender']
 		user_id = request.user.id
 
-		Profile.objects.filter(id = user_id).create(user_id=user_id, birth_date=birth_date, gender=gender, region=region)
-		messages.success(request, 'Your Profile Was Created Successfully')
+		# Check if profile already exists
+		existing_profile = Profile.objects.filter(user_id=user_id).first()
+		
+		if existing_profile:
+			# Update existing profile
+			existing_profile.birth_date = birth_date
+			existing_profile.region = region
+			existing_profile.country = country
+			existing_profile.gender = gender
+			existing_profile.save()
+			messages.success(request, 'Your Profile Was Updated Successfully')
+		else:
+			# Create new profile
+			Profile.objects.create(user_id=user_id, birth_date=birth_date, gender=gender, region=region, country=country)
+			messages.success(request, 'Your Profile Was Created Successfully')
+		
 		return redirect('patient')
 	else:
 		user_id = request.user.id
-		users = Profile.objects.filter(user_id=user_id)
-		users = {'users':users}
+		# Get existing profile if it exists
+		profile = Profile.objects.filter(user_id=user_id).first()
+		
+		# Set status based on whether profile exists
+		status = '1' if profile else '0'
+		
 		choice = ['1','0']
 		gender = ["Male", "Female"]
-		context = {"users": {"users":users}, "choice":{"choice":choice}, "gender":gender}
-		return render(request, 'patient/create_profile.html', context)	
+		context = {"profile": profile, "choice": choice, "gender": gender, "status": status}
+		return render(request, 'patient/create_profile.html', context)
 
 
 
