@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 
 
 class User(AbstractUser):
+    name = models.TextField(default="John")
     is_patient = models.BooleanField(default=False)
     is_doctor = models.BooleanField(default=False)
     phonenumber = models.CharField(max_length=200,null=True)

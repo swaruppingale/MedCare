@@ -31,12 +31,13 @@ def registerView(request):
 
 def registerUser(request):
 	if request.method == 'POST':
+		name = request.POST["name"]
 		username = request.POST['username']
 		email = request.POST['email']
 		password = request.POST['password']
 		password = make_password(password)
 
-		a = User(username=username, email=email, password=password, is_patient=True)
+		a = User(username=username, email=email, password=password, name=name,is_patient=True)
 		a.save()
 		messages.success(request, 'Account Was Created Successfully')
 		return redirect('reg')
