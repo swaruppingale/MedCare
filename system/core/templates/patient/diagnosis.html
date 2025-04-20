@@ -2,110 +2,279 @@
 {% load static %}
 
 {% block body %}
+<div id="content-wrapper">
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-lg border-0 rounded-lg">
+                    <div class="card-header bg-gradient-primary py-3">
+                        <h4 class="text-center text-white mb-0">
+                            <i class="fas fa-stethoscope mr-2"></i>Disease Prediction
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Introduction Text -->
+                        <div class="alert alert-info bg-light border-left-primary py-2">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-info-circle text-primary mr-2"></i>
+                                <small>Please select 5 symptoms you are experiencing for AI-based diagnosis.</small>
+                            </div>
+                        </div>
 
- <div id="content-wrapper">
+                        <form method="POST" action="" class="myform">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{ user.id }}" name="" id="user_id">
+                            
+                            <!-- Symptoms Input Section -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {% for i in '12345'|make_list %}
+                                    <div class="form-group mb-3">
+                                        <label for="Symptom{{ i }}" class="form-label small mb-1">
+                                            <i class="fas fa-heartbeat text-primary mr-1"></i>
+                                            <span class="font-weight-bold">Symptom {{ i }}</span>
+                                        </label>
+                                        <div class="input-group input-group-sm">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text bg-light">
+                                                    <i class="fas fa-search"></i>
+                                                </span>
+                                            </div>
+                                            <input type="text" 
+                                                class="form-control symptom-input" 
+                                                list="symp" 
+                                                id="Symptom{{ i }}" 
+                                                name="Symptom{{ i }}" 
+                                                placeholder="Type to search symptoms..."
+                                                required
+                                                autocomplete="off">
+                                            <div class="dropdown-menu w-100 symptom-dropdown" style="max-height: 200px; overflow-y: auto;">
+                                                {% for symp in symptoms %}
+                                                <a class="dropdown-item" href="#" data-value="{{ symp }}">{{ symp }}</a>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
 
-        <div class="container-fluid">
+                            <!-- Predict Button -->
+                            <div class="text-center mt-4">
+                                <button type="button" 
+                                    class="btn btn-primary px-4 py-2" 
+                                    id="predict_btn">
+                                    <i class="fas fa-brain mr-2"></i>
+                                    Predict Disease
+                                </button>
+                            </div>
+                        </form>
 
-
-            <!-- Icon Cards-->
-            <div class="row">
-
-
-                <div class="card-body">
-
-        <h4 class="text-center alert alert-info">Disease Prediction Panel</h4>
-
-<!--
-    <h5 class="card-title text-primary">Please Fill In Your Symptoms</h5>
--->
-<br>
-
-
-    <form method="POST" action="" class="myform">
-      {% csrf_token %}
-
-      <input type="hidden"  value="{{ user.id }}" name="" id="user_id">
-    <div class="form-group row">
-        <label for="Symptom" class="col-sm-2 col-form-label">1st Symptom</label>
-        <div class="col-sm-6">
-           <input type="text" class="form-control" list="symp" multiple="multiple" name="Symptom1" id="Symptom1" placeholder="Please Choose Symptom" required="">
+                        <!-- Result Section -->
+                        <div id="result-section" class="mt-4" style="display: none;">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-3">
+                                    <h5 class="text-center mb-3">
+                                        <i class="fas fa-clipboard-check text-primary mr-2"></i>
+                                        Prediction Result
+                                    </h5>
+                                    <div id="result" class="alert alert-primary py-2">
+                                        <!-- Result will be displayed here -->
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <button class="btn btn-sm btn-outline-primary" onclick="window.location.reload()">
+                                            <i class="fas fa-redo mr-1"></i>New Prediction
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <datalist id="symp">
-          {% for symp in symptoms %}
-          <option value= "{{symp}}">{{symp}}</option>
-        {% endfor %}
-      </datalist>
     </div>
-
-     <div class="form-group row">
-        <label for="Symptom2" class="col-sm-2 col-form-label">2nd Symptom</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" list="symp" name="Symptom2" id="Symptom2" placeholder="Please Choose Symptom" required="">
-        </div>
-        <datalist id="symp">
-          {% for symp in symptoms %}
-          <option value= "{{symp}}">{{symp}}</option>
-        {% endfor %}
-      </datalist>
-    </div>
-
-     <div class="form-group row">
-        <label for="Symptom3" class="col-sm-2 col-form-label">3rd Symptom</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" list="symp" name="Symptom3" id="Symptom3" placeholder="Please Choose Symptom" required="">
-        </div>
-        <datalist id="symp">
-          {% for symp in symptoms %}
-          <option value= "{{symp}}">{{symp}}</option>
-        {% endfor %}
-      </datalist>
-    </div>
-
-     <div class="form-group row">
-        <label for="Symptom4" class="col-sm-2 col-form-label">4th Symptom</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" multiple="multiple" list="symp" id="Symptom4" name="Symptom4" placeholder="Please Choose Symptom" required="">
-        </div>
-        <datalist id="symp">
-          {% for symp in symptoms %}
-          <option value= "{{symp}}">{{symp}}</option>
-        {% endfor %}
-      </datalist>
-    </div>
-
-
-     <div class="form-group row">
-        <label for="Symptom5" class="col-sm-2 col-form-label">5th Symptom</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" list="symp" id="Symptom5" name="Symptom5" placeholder="Please Choose Symptom" required="">
-        </div>
-        <datalist id="symp">
-          {% for symp in symptoms %}
-          <option value= "{{symp}}">{{symp}}</option>
-        {% endfor %}
-      </datalist>
-    </div>
-
-    <div class="form-group row">
-        <div class="col-sm-10 offset-sm-2">
-            <button type="button" class="btn btn-primary" id="predict_btn">Predict</button>
-        </div>
-    </div>
-
-
-
-<div id="result" class="col-sm-10 offset-sm-3"></div>
- 
-
-</form>
 </div>
 
-</div>
-</div>
-</div>
+{% block javascript %}
+<script>
+$(document).ready(function() {
+    // Handle symptom input and dropdown
+    $('.symptom-input').each(function() {
+        const input = $(this);
+        const dropdown = input.siblings('.symptom-dropdown');
+        
+        // Show dropdown on focus
+        input.on('focus', function() {
+            dropdown.show();
+        });
+        
+        // Filter dropdown items
+        input.on('input', function() {
+            const value = this.value.toLowerCase();
+            dropdown.find('.dropdown-item').each(function() {
+                const text = $(this).text().toLowerCase();
+                $(this).toggle(text.includes(value));
+            });
+            dropdown.show();
+        });
+        
+        // Handle dropdown item click
+        dropdown.on('click', '.dropdown-item', function(e) {
+            e.preventDefault();
+            input.val($(this).data('value'));
+            dropdown.hide();
+        });
+        
+        // Hide dropdown when clicking outside
+        $(document).on('click', function(e) {
+            if (!input.is(e.target) && !dropdown.is(e.target) && dropdown.has(e.target).length === 0) {
+                dropdown.hide();
+            }
+        });
+    });
 
+    // Predict button click handler
+    $('#predict_btn').click(function() {
+        const btn = $(this);
+        btn.html('<i class="fas fa-spinner fa-spin mr-2"></i>Analyzing...').prop('disabled', true);
+        
+        const symptoms = {
+            s1: $('#Symptom1').val(),
+            s2: $('#Symptom2').val(),
+            s3: $('#Symptom3').val(),
+            s4: $('#Symptom4').val(),
+            s5: $('#Symptom5').val(),
+            id: $('#user_id').val()
+        };
 
+        $.ajax({
+            url: '/make_predict',
+            type: 'POST',
+            data: symptoms,
+            success: function(response) {
+                $('#result-section').slideDown();
+                
+                let resultHtml = `
+                    <div class="text-center">
+                        <h6 class="mb-2">Based on your symptoms:</h6>
+                        <h5 class="text-primary mb-2">${response.status}</h5>
+                        <small class="text-muted">This is an AI prediction and should not replace medical advice.</small>
+                    </div>
+                `;
+                
+                $('#result').html(resultHtml);
+                
+                $('html, body').animate({
+                    scrollTop: $('#result-section').offset().top - 100
+                }, 500);
+            },
+            error: function() {
+                $('#result').html(`
+                    <div class="alert alert-danger py-2">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        An error occurred. Please try again.
+                    </div>
+                `);
+            },
+            complete: function() {
+                btn.html('<i class="fas fa-brain mr-2"></i>Predict Disease').prop('disabled', false);
+            }
+        });
+    });
+});
+</script>
 
+<style>
+.bg-gradient-primary {
+    background: linear-gradient(45deg, #4e73df 0%, #224abe 100%);
+}
+
+.border-left-primary {
+    border-left: 4px solid #4e73df !important;
+}
+
+.form-control {
+    transition: all 0.2s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+.symptom-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 0.25rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.175);
+}
+
+.symptom-dropdown .dropdown-item {
+    padding: 0.4rem 1rem;
+    font-size: 0.875rem;
+}
+
+.symptom-dropdown .dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #4e73df;
+}
+
+.btn-primary {
+    background-color: #4e73df;
+    border-color: #4e73df;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+    background-color: #224abe;
+    border-color: #224abe;
+    transform: translateY(-1px);
+}
+
+.form-group {
+    transition: all 0.3s ease-in-out;
+    border-radius: 0.25rem;
+    padding: 0.25rem;
+}
+
+.form-group:hover {
+    background-color: rgba(78, 115, 223, 0.05);
+}
+
+#result-section {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Custom scrollbar for dropdown */
+.symptom-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.symptom-dropdown::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.symptom-dropdown::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.symptom-dropdown::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+</style>
+{% endblock %}
 
 {% endblock %}

@@ -36,7 +36,7 @@
                         {% for d in ment %}
                         <tr>
                             <td>{{ d.id }}</td>
-                            <td>{{ d.patient.username }}</td>
+                            <td>{{ d.patient.name }}</td>
                             <td> {% if d.approved == True %}
                                 Approved
                                 {% else %}
